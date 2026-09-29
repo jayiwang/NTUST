@@ -1,1 +1,2333 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="115富六學分班會計、統計與經濟學課程筆記">
+    <title>115富六學分班</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f4f6f8;
+        --panel: #ffffff;
+        --ink: #172033;
+        --muted: #657083;
+        --line: #dce2ea;
+        --blue: #215fb7;
+        --blue-soft: #eaf1fb;
+        --green: #14765a;
+        --green-soft: #e8f5f0;
+        --amber: #9a6208;
+        --amber-soft: #fff3dc;
+        --red: #a43e3e;
+        --red-soft: #fff0ef;
+        --shadow: 0 10px 28px rgba(29, 42, 65, .09);
+        font-family: "Microsoft JhengHei", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
 
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+      }
+
+      button, input { font: inherit; }
+
+      button { color: inherit; }
+
+      .topbar {
+        position: sticky;
+        z-index: 20;
+        top: 0;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, .96);
+        backdrop-filter: blur(12px);
+      }
+
+      .topbar-inner {
+        display: flex;
+        width: min(1240px, calc(100% - 32px));
+        min-height: 64px;
+        margin: 0 auto;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+      }
+
+      .brand strong { font-size: 20px; }
+
+      .brand span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .top-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .home-button,
+      .schedule-button {
+        min-height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--ink);
+        cursor: pointer;
+        padding: 7px 14px;
+        font-weight: 700;
+      }
+
+      .home-button:hover,
+      .schedule-button:hover { background: #f3f6fa; }
+
+      .schedule-button {
+        border-color: #9dbce8;
+        background: var(--blue-soft);
+        color: var(--blue);
+      }
+
+      .shell {
+        width: min(1240px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 56px;
+      }
+
+      .intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 24px;
+        align-items: end;
+        padding: 8px 0 22px;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: var(--blue);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 38px;
+        line-height: 1.2;
+      }
+
+      .lead {
+        max-width: 760px;
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.75;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 92px);
+        gap: 8px;
+      }
+
+      .stat {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 10px;
+        text-align: center;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 24px;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .search {
+        display: flex;
+        min-height: 46px;
+        align-items: center;
+        gap: 9px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        padding: 0 14px;
+      }
+
+      .search span {
+        color: var(--muted);
+        font-size: 20px;
+      }
+
+      .search input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--ink);
+      }
+
+      .progress-note {
+        display: flex;
+        align-items: center;
+        border: 1px solid #b9d5c9;
+        border-radius: 8px;
+        background: var(--green-soft);
+        color: var(--green);
+        padding: 0 14px;
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .subject-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .subject-entry {
+        display: flex;
+        min-height: 270px;
+        flex-direction: column;
+        align-items: stretch;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        padding: 24px;
+        text-align: left;
+        transition: transform .15s ease, border-color .15s ease;
+      }
+
+      .subject-entry:hover {
+        border-color: #9dbce8;
+        transform: translateY(-2px);
+      }
+
+      .subject-icon {
+        display: grid;
+        width: 52px;
+        height: 52px;
+        place-items: center;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 23px;
+        font-weight: 900;
+      }
+
+      .subject-entry.accounting .subject-icon { background: var(--blue); }
+      .subject-entry.statistics .subject-icon { background: var(--green); }
+      .subject-entry.economics .subject-icon { background: var(--amber); }
+
+      .subject-entry h2 {
+        margin: 22px 0 8px;
+        font-size: 27px;
+      }
+
+      .subject-entry p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .subject-foot {
+        display: flex;
+        margin-top: auto;
+        padding-top: 24px;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--blue);
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .schedule-view {
+        display: grid;
+        gap: 18px;
+      }
+
+      .schedule-cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .schedule-card {
+        border: 1px solid var(--line);
+        border-top: 5px solid var(--blue);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+
+      .schedule-card.statistics { border-top-color: var(--green); }
+      .schedule-card.economics { border-top-color: var(--amber); }
+
+      .schedule-card h2 {
+        margin: 0;
+        font-size: 23px;
+      }
+
+      .teacher {
+        margin: 5px 0 15px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .schedule-facts {
+        display: grid;
+        gap: 9px;
+        margin: 0;
+      }
+
+      .schedule-facts div {
+        display: grid;
+        grid-template-columns: 64px minmax(0, 1fr);
+        gap: 8px;
+        line-height: 1.55;
+      }
+
+      .schedule-facts dt {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 800;
+      }
+
+      .schedule-facts dd {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .calendar-panel {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        padding: 20px;
+      }
+
+      .calendar-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .calendar-head h2 {
+        margin: 0;
+        font-size: 23px;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .legend i {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        background: var(--blue);
+      }
+
+      .legend .statistics { background: var(--green); }
+      .legend .economics { background: var(--amber); }
+
+      .months {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .month {
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        overflow: hidden;
+      }
+
+      .month h3 {
+        margin: 0;
+        background: #eef2f7;
+        padding: 12px;
+        text-align: center;
+        font-size: 18px;
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+      }
+
+      .weekday {
+        border-bottom: 1px solid var(--line);
+        background: #f8fafc;
+        color: var(--muted);
+        padding: 8px 4px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .day {
+        min-width: 0;
+        min-height: 94px;
+        border-right: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: 6px;
+      }
+
+      .day:nth-child(7n) { border-right: 0; }
+      .day.empty { background: #fafbfc; }
+
+      .day-number {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .calendar-event {
+        display: block;
+        margin-top: 4px;
+        border-left: 3px solid var(--blue);
+        border-radius: 4px;
+        background: var(--blue-soft);
+        padding: 4px 5px;
+        color: var(--blue);
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
+      .calendar-event.statistics {
+        border-left-color: var(--green);
+        background: var(--green-soft);
+        color: var(--green);
+      }
+
+      .calendar-event.economics {
+        border-left-color: var(--amber);
+        background: var(--amber-soft);
+        color: var(--amber);
+      }
+
+      .privacy-note {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      .workspace {
+        display: grid;
+        grid-template-columns: 330px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .chapter-panel {
+        position: sticky;
+        top: 82px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .panel-head {
+        border-bottom: 1px solid var(--line);
+        padding: 17px;
+      }
+
+      .panel-head h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .panel-head p {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .chapter-list {
+        display: grid;
+        gap: 7px;
+        max-height: calc(100vh - 205px);
+        overflow-y: auto;
+        padding: 10px;
+      }
+
+      .chapter-button {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 11px;
+        align-items: center;
+        width: 100%;
+        border: 1px solid transparent;
+        border-radius: 7px;
+        background: transparent;
+        cursor: pointer;
+        padding: 10px;
+        text-align: left;
+      }
+
+      .chapter-button:hover { background: #f7f9fc; }
+
+      .chapter-button.active {
+        border-color: #9dbce8;
+        background: var(--blue-soft);
+      }
+
+      .chapter-no {
+        display: grid;
+        width: 42px;
+        height: 42px;
+        place-items: center;
+        border-radius: 7px;
+        background: #eef1f5;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .chapter-button.active .chapter-no {
+        background: var(--blue);
+        color: #fff;
+      }
+
+      .chapter-name {
+        display: block;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.45;
+      }
+
+      .chapter-meta {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .note {
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .note-hero {
+        border-bottom: 1px solid var(--line);
+        background: #172033;
+        color: #fff;
+        padding: 25px 28px;
+      }
+
+      .note-label {
+        margin: 0 0 8px;
+        color: #9fc2f5;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .note-hero h2 {
+        margin: 0;
+        font-size: 30px;
+        line-height: 1.35;
+      }
+
+      .note-hero p {
+        max-width: 780px;
+        margin: 10px 0 0;
+        color: #d6deea;
+        line-height: 1.7;
+      }
+
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 14px;
+      }
+
+      .tag {
+        border: 1px solid rgba(255, 255, 255, .22);
+        border-radius: 999px;
+        padding: 4px 9px;
+        color: #fff;
+        font-size: 12px;
+      }
+
+      .note-body { padding: 8px 28px 32px; }
+
+      .note-section {
+        padding: 23px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .note-section:last-child { border-bottom: 0; }
+
+      .note-section h3 {
+        margin: 0 0 13px;
+        color: var(--blue);
+        font-size: 21px;
+      }
+
+      .note-section h4 {
+        margin: 19px 0 8px;
+        font-size: 16px;
+      }
+
+      .note-section p,
+      .note-section li {
+        line-height: 1.75;
+      }
+
+      .note-section p { margin: 8px 0; }
+
+      .note-section ul,
+      .note-section ol {
+        margin: 8px 0;
+        padding-left: 23px;
+      }
+
+      .formula {
+        margin: 15px 0;
+        border-left: 4px solid var(--blue);
+        background: var(--blue-soft);
+        padding: 13px 15px;
+        font-size: 17px;
+        font-weight: 900;
+        line-height: 1.6;
+      }
+
+      .example,
+      .warning {
+        margin: 14px 0;
+        border-radius: 7px;
+        padding: 14px 16px;
+        line-height: 1.7;
+      }
+
+      .example {
+        border: 1px solid #b9d5c9;
+        background: var(--green-soft);
+      }
+
+      .warning {
+        border: 1px solid #e6c3bf;
+        background: var(--red-soft);
+      }
+
+      .example strong { color: var(--green); }
+
+      .warning strong { color: var(--red); }
+
+      .table-wrap {
+        margin: 14px 0;
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+        background: #fff;
+        font-size: 14px;
+      }
+
+      th, td {
+        border-bottom: 1px solid var(--line);
+        padding: 11px 12px;
+        text-align: left;
+        vertical-align: top;
+        line-height: 1.55;
+      }
+
+      th {
+        background: #f0f3f7;
+        font-weight: 900;
+      }
+
+      tr:last-child td { border-bottom: 0; }
+
+      .entry {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 9px 18px;
+        margin: 12px 0;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        background: #f8fafc;
+        padding: 13px 15px;
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        line-height: 1.55;
+      }
+
+      .entry .credit { padding-left: 24px; }
+
+      .quiz {
+        margin-top: 12px;
+        border: 1px solid #e2c78e;
+        border-radius: 7px;
+        background: var(--amber-soft);
+        padding: 13px 15px;
+      }
+
+      .quiz p { margin-top: 0; }
+
+      .quiz details {
+        margin-top: 10px;
+        border-top: 1px solid #e2c78e;
+        padding-top: 10px;
+      }
+
+      .quiz summary {
+        color: var(--amber);
+        cursor: pointer;
+        font-weight: 900;
+      }
+
+      .empty {
+        padding: 42px 28px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .hidden { display: none !important; }
+
+      @media (max-width: 900px) {
+        .topbar-inner,
+        .intro {
+          align-items: stretch;
+        }
+
+        .topbar-inner {
+          flex-direction: column;
+          padding: 10px 0;
+        }
+
+        .intro { grid-template-columns: 1fr; }
+
+        .stats { grid-template-columns: repeat(3, 1fr); }
+
+        .subject-grid { grid-template-columns: 1fr; }
+
+        .subject-entry { min-height: 220px; }
+
+        .schedule-cards,
+        .months { grid-template-columns: 1fr; }
+
+        .workspace { grid-template-columns: 1fr; }
+
+        .chapter-panel {
+          position: static;
+        }
+
+        .chapter-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          max-height: none;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .shell,
+        .topbar-inner {
+          width: min(100% - 20px, 1240px);
+        }
+
+        h1 { font-size: 31px; }
+
+        .toolbar { grid-template-columns: 1fr; }
+
+        .progress-note {
+          min-height: 42px;
+          justify-content: center;
+        }
+
+        .chapter-list { grid-template-columns: 1fr; }
+
+        .note-hero,
+        .note-body {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+
+        .note-hero h2 { font-size: 25px; }
+
+        .calendar-panel { padding: 12px; }
+
+        .calendar-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .day {
+          min-height: 78px;
+          padding: 4px;
+        }
+
+        .calendar-event {
+          padding: 3px;
+          font-size: 10px;
+        }
+      }
+
+      /* Academic portal theme */
+      :root {
+        --bg: #f6f6f3;
+        --panel: #ffffff;
+        --ink: #202124;
+        --muted: #676b70;
+        --line: #d7d8d5;
+        --blue: #8b2635;
+        --blue-soft: #f7edef;
+        --green: #356859;
+        --green-soft: #edf4f1;
+        --amber: #8a641d;
+        --amber-soft: #faf4e6;
+        --red: #9a3c36;
+        --red-soft: #fbefed;
+        --shadow: none;
+      }
+
+      body { background: var(--bg); }
+
+      .topbar {
+        position: static;
+        border-top: 5px solid var(--blue);
+        border-bottom: 1px solid #c8c9c6;
+        background: #fff;
+        backdrop-filter: none;
+      }
+
+      .topbar-inner {
+        width: min(1120px, calc(100% - 32px));
+        min-height: 66px;
+      }
+
+      .brand {
+        align-items: center;
+        gap: 14px;
+      }
+
+      .brand strong {
+        font-family: Georgia, "Times New Roman", "Microsoft JhengHei", serif;
+        font-size: 22px;
+      }
+
+      .brand span {
+        border-left: 1px solid var(--line);
+        padding-left: 14px;
+      }
+
+      .home-button,
+      .schedule-button {
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        padding: 8px 4px;
+      }
+
+      .home-button:hover,
+      .schedule-button:hover {
+        background: transparent;
+        color: var(--blue);
+        text-decoration: underline;
+        text-underline-offset: 5px;
+      }
+
+      .schedule-button {
+        color: var(--ink);
+      }
+
+      .shell {
+        width: min(1120px, calc(100% - 32px));
+        padding-top: 34px;
+      }
+
+      .intro {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0 0 28px;
+        border-bottom: 1px solid var(--line);
+        margin-bottom: 24px;
+      }
+
+      .eyebrow {
+        color: var(--blue);
+        letter-spacing: .04em;
+      }
+
+      h1 {
+        font-family: Georgia, "Times New Roman", "Microsoft JhengHei", serif;
+        font-size: 34px;
+        font-weight: 700;
+      }
+
+      .lead {
+        margin-top: 9px;
+        font-size: 15px;
+      }
+
+      .stats {
+        display: none;
+      }
+
+      .stat {
+        min-width: 86px;
+        border: 0;
+        border-left: 1px solid var(--line);
+        border-radius: 0;
+        background: transparent;
+        padding: 3px 16px;
+      }
+
+      .stat strong {
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .subject-grid {
+        display: block;
+        border-top: 1px solid var(--line);
+        background: var(--panel);
+      }
+
+      .subject-entry {
+        position: relative;
+        display: grid;
+        grid-template-columns: 190px minmax(0, 1fr) 150px;
+        min-height: 0;
+        width: 100%;
+        align-items: center;
+        gap: 24px;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        border-radius: 0;
+        background: #fff;
+        box-shadow: none;
+        padding: 24px 20px;
+      }
+
+      .subject-entry:hover {
+        border-color: var(--line);
+        background: #faf9f7;
+        transform: none;
+      }
+
+      .subject-entry::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        background: var(--blue);
+        content: "";
+        opacity: 0;
+      }
+
+      .subject-entry:hover::before { opacity: 1; }
+      .subject-entry.statistics::before { background: var(--green); }
+      .subject-entry.economics::before { background: var(--amber); }
+
+      .subject-icon { display: none; }
+
+      .subject-entry h2 {
+        margin: 0;
+        font-size: 21px;
+      }
+
+      .subject-entry p {
+        font-size: 14px;
+      }
+
+      .subject-foot {
+        margin: 0;
+        padding: 0;
+        justify-content: flex-end;
+        color: var(--ink);
+        font-size: 13px;
+      }
+
+      .subject-foot span:first-child { display: none; }
+
+      .toolbar {
+        margin-bottom: 14px;
+      }
+
+      .search,
+      .progress-note {
+        min-height: 42px;
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .progress-note {
+        border-color: var(--line);
+        background: #fff;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      .workspace {
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 28px;
+      }
+
+      .chapter-panel,
+      .note,
+      .calendar-panel {
+        border-radius: 0;
+        box-shadow: none;
+      }
+
+      .chapter-panel {
+        top: 18px;
+      }
+
+      .panel-head {
+        padding: 16px 14px;
+      }
+
+      .panel-head h2 {
+        font-size: 18px;
+      }
+
+      .chapter-list {
+        gap: 0;
+        padding: 0;
+      }
+
+      .chapter-button {
+        grid-template-columns: 42px minmax(0, 1fr);
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        border-radius: 0;
+        padding: 13px 12px;
+      }
+
+      .chapter-button:hover { background: #f8f7f5; }
+
+      .chapter-button.active {
+        border-color: var(--line);
+        background: var(--blue-soft);
+      }
+
+      .chapter-no,
+      .chapter-button.active .chapter-no {
+        width: auto;
+        height: auto;
+        border-radius: 0;
+        background: transparent;
+        color: var(--blue);
+      }
+
+      .note-hero {
+        border-bottom: 2px solid var(--blue);
+        background: #fff;
+        color: var(--ink);
+        padding: 28px;
+      }
+
+      .note-label { color: var(--blue); }
+
+      .note-hero h2 {
+        font-family: Georgia, "Times New Roman", "Microsoft JhengHei", serif;
+        font-size: 28px;
+      }
+
+      .note-hero p { color: var(--muted); }
+
+      .tag-list { margin-top: 16px; }
+
+      .tag {
+        border-color: var(--line);
+        border-radius: 2px;
+        color: var(--muted);
+        padding: 3px 7px;
+      }
+
+      .note-section h3 {
+        color: var(--ink);
+        font-size: 19px;
+      }
+
+      .formula,
+      .example,
+      .warning,
+      .entry,
+      .quiz,
+      .table-wrap {
+        border-radius: 0;
+      }
+
+      .formula {
+        background: #f4f3f0;
+        border-left-color: var(--blue);
+      }
+
+      .schedule-cards {
+        grid-template-columns: 1fr;
+        gap: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .schedule-card {
+        display: grid;
+        grid-template-columns: 150px 200px minmax(0, 1fr);
+        align-items: start;
+        gap: 22px;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        border-radius: 0;
+        background: #fff;
+        box-shadow: none;
+        padding: 20px;
+      }
+
+      .schedule-card h2 {
+        font-size: 20px;
+      }
+
+      .teacher { margin: 2px 0 0; }
+
+      .schedule-facts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .calendar-panel {
+        padding: 20px;
+      }
+
+      .month {
+        border-radius: 0;
+      }
+
+      .month h3 {
+        background: #f1f0ed;
+        font-family: Georgia, "Times New Roman", "Microsoft JhengHei", serif;
+      }
+
+      .calendar-event {
+        border-radius: 0;
+      }
+
+      @media (max-width: 900px) {
+        .topbar-inner {
+          align-items: center;
+          flex-direction: row;
+        }
+
+        .intro {
+          grid-template-columns: 1fr;
+        }
+
+        .subject-entry {
+          grid-template-columns: 150px minmax(0, 1fr) 120px;
+        }
+
+        .schedule-card {
+          grid-template-columns: 130px 180px minmax(0, 1fr);
+        }
+      }
+
+      @media (max-width: 680px) {
+        .brand span { display: none; }
+
+        .top-actions { gap: 12px; }
+
+        .home-button,
+        .schedule-button {
+          font-size: 13px;
+        }
+
+        .intro { margin-bottom: 18px; }
+
+        .stats {
+          width: 100%;
+          border-top: 1px solid var(--line);
+          padding-top: 14px;
+        }
+
+        .stat:first-child {
+          border-left: 0;
+          padding-left: 0;
+        }
+
+        .subject-entry {
+          grid-template-columns: 1fr;
+          gap: 7px;
+          padding: 20px 16px;
+        }
+
+        .subject-foot {
+          justify-content: flex-start;
+          margin-top: 5px;
+        }
+
+        .schedule-card {
+          grid-template-columns: 1fr;
+          gap: 6px;
+          padding: 18px 14px;
+        }
+
+        .schedule-facts {
+          grid-template-columns: 1fr;
+          margin-top: 10px;
+        }
+      }
+
+      /* Clean technology theme */
+      :root {
+        --bg: #edf2f5;
+        --panel: #ffffff;
+        --ink: #17222d;
+        --muted: #607080;
+        --line: #cfd9e1;
+        --blue: #087ea4;
+        --blue-soft: #e7f5f9;
+        --green: #24745d;
+        --green-soft: #e9f5f0;
+        --amber: #9b6a10;
+        --amber-soft: #fff5df;
+        --red: #a34242;
+        --red-soft: #fff0ef;
+      }
+
+      body {
+        background: var(--bg);
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        border-top: 0;
+        border-bottom: 3px solid #28b8d8;
+        background: #101820;
+      }
+
+      .topbar-inner {
+        min-height: 62px;
+      }
+
+      .brand strong {
+        color: #fff;
+        font-family: "Microsoft JhengHei", system-ui, sans-serif;
+        font-size: 20px;
+      }
+
+      .brand span {
+        border-left-color: #43515d;
+        color: #aebbc5;
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        letter-spacing: .03em;
+      }
+
+      .home-button,
+      .schedule-button {
+        border: 1px solid #53626e;
+        border-radius: 4px;
+        color: #e8f0f5;
+        padding: 7px 12px;
+      }
+
+      .home-button:hover,
+      .schedule-button:hover {
+        border-color: #28b8d8;
+        background: #17242e;
+        color: #66d4ec;
+        text-decoration: none;
+      }
+
+      .shell {
+        padding-top: 30px;
+      }
+
+      .intro {
+        border-bottom: 0;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+      }
+
+      .eyebrow {
+        color: var(--blue);
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        font-size: 12px;
+        letter-spacing: .06em;
+      }
+
+      h1 {
+        color: var(--ink);
+        font-family: "Microsoft JhengHei", system-ui, sans-serif;
+        font-size: 34px;
+      }
+
+      .lead {
+        max-width: 780px;
+      }
+
+      .subject-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        border: 0;
+        background: transparent;
+      }
+
+      .subject-entry {
+        display: flex;
+        min-height: 260px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(30, 52, 68, .07);
+        padding: 22px;
+      }
+
+      .subject-entry:hover {
+        border-color: #77bfd1;
+        background: #fff;
+        box-shadow: 0 12px 26px rgba(30, 52, 68, .12);
+        transform: translateY(-2px);
+      }
+
+      .subject-entry::before {
+        top: 0;
+        right: 0;
+        bottom: auto;
+        width: 100%;
+        height: 3px;
+        background: var(--blue);
+        opacity: 1;
+      }
+
+      .subject-icon {
+        display: grid;
+        width: 46px;
+        height: 46px;
+        border: 1px solid rgba(255, 255, 255, .25);
+        border-radius: 4px;
+        background: #0b789c;
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        font-size: 19px;
+      }
+
+      .subject-entry.statistics .subject-icon { background: var(--green); }
+      .subject-entry.economics .subject-icon { background: var(--amber); }
+
+      .subject-entry h2 {
+        margin: 20px 0 8px;
+        font-size: 22px;
+      }
+
+      .subject-entry p {
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .subject-foot {
+        margin-top: auto;
+        padding-top: 22px;
+        justify-content: space-between;
+        color: var(--blue);
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+      }
+
+      .subject-foot span:first-child {
+        display: inline;
+        color: var(--muted);
+      }
+
+      .search,
+      .progress-note {
+        border-radius: 4px;
+      }
+
+      .search:focus-within {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(8, 126, 164, .12);
+      }
+
+      .progress-note {
+        border-color: #b7d9e3;
+        background: var(--blue-soft);
+        color: var(--blue);
+      }
+
+      .workspace {
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 18px;
+      }
+
+      .chapter-panel,
+      .note,
+      .calendar-panel {
+        border-radius: 4px;
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(30, 52, 68, .06);
+      }
+
+      .chapter-panel {
+        top: 80px;
+      }
+
+      .panel-head {
+        border-top: 3px solid var(--blue);
+      }
+
+      .panel-head h2 {
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+      }
+
+      .chapter-button {
+        border-left: 3px solid transparent;
+      }
+
+      .chapter-button.active {
+        border-left-color: var(--blue);
+        background: var(--blue-soft);
+      }
+
+      .chapter-no,
+      .chapter-button.active .chapter-no {
+        color: var(--blue);
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+      }
+
+      .note-hero {
+        border-bottom: 3px solid #28b8d8;
+        background: #13212c;
+        color: #fff;
+      }
+
+      .note-label {
+        color: #5ed0e9;
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        letter-spacing: .05em;
+      }
+
+      .note-hero h2 {
+        color: #fff;
+        font-family: "Microsoft JhengHei", system-ui, sans-serif;
+      }
+
+      .note-hero p { color: #c6d2da; }
+
+      .tag {
+        border-color: #4a5b67;
+        border-radius: 3px;
+        color: #c6d2da;
+      }
+
+      .formula,
+      .example,
+      .warning,
+      .entry,
+      .quiz,
+      .table-wrap {
+        border-radius: 3px;
+      }
+
+      .formula {
+        background: #eef5f7;
+      }
+
+      .schedule-cards {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        border-top: 0;
+      }
+
+      .schedule-card {
+        display: block;
+        border: 1px solid var(--line);
+        border-top: 3px solid var(--blue);
+        border-radius: 4px;
+        box-shadow: 0 6px 16px rgba(30, 52, 68, .06);
+        padding: 18px;
+      }
+
+      .schedule-card.statistics { border-top-color: var(--green); }
+      .schedule-card.economics { border-top-color: var(--amber); }
+
+      .schedule-card h2 {
+        font-size: 21px;
+      }
+
+      .teacher {
+        margin: 5px 0 15px;
+      }
+
+      .schedule-facts {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .calendar-panel {
+        padding: 18px;
+      }
+
+      .calendar-head h2 {
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        font-size: 20px;
+      }
+
+      .month {
+        border-radius: 3px;
+      }
+
+      .month h3 {
+        border-bottom: 2px solid #b9dce5;
+        background: #eef5f7;
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+      }
+
+      .calendar-event {
+        border-radius: 2px;
+      }
+
+      @media (max-width: 900px) {
+        .subject-grid,
+        .schedule-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .subject-entry {
+          min-height: 210px;
+        }
+      }
+
+      @media (max-width: 680px) {
+        .topbar-inner {
+          width: min(100% - 20px, 1120px);
+        }
+
+        .subject-entry {
+          display: flex;
+          padding: 20px;
+        }
+
+        .subject-foot {
+          justify-content: space-between;
+        }
+
+        .schedule-card {
+          display: block;
+          padding: 17px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <strong>115富六學分班</strong>
+          <span>NTUST EMBA Learning Hub</span>
+        </div>
+        <div class="top-actions">
+          <button id="scheduleButton" class="schedule-button" type="button">課程行事曆</button>
+          <button id="homeButton" class="home-button hidden" type="button">回主畫面</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="intro">
+        <div>
+          <p class="eyebrow">NTUST / EMBA / LEARNING SYSTEM</p>
+          <h1 id="pageTitle">115富六學分班</h1>
+          <p id="pageLead" class="lead">選擇科目後，再進入各章節閱讀課堂筆記、例題與小測驗。</p>
+        </div>
+        <aside class="stats" aria-label="課程統計">
+          <div class="stat"><strong id="chapterCount">3</strong><span id="countLabel">科目</span></div>
+          <div class="stat"><strong id="middleCount">10</strong><span id="middleLabel">章節入口</span></div>
+          <div class="stat"><strong id="quizCount">6</strong><span id="quizLabel">會計測驗</span></div>
+        </aside>
+      </section>
+
+      <section id="homeView" class="subject-grid" aria-label="科目入口">
+        <button class="subject-entry accounting" type="button" data-course="accounting">
+          <span class="subject-icon">會</span>
+          <h2>會計科</h2>
+          <p>會計恆等式、借貸分錄、調整結帳、投資合併、每股盈餘與其他實務議題。</p>
+          <span class="subject-foot"><span>6 個章節</span><span>開啟課程 →</span></span>
+        </button>
+        <button class="subject-entry statistics" type="button" data-course="statistics">
+          <span class="subject-icon">統</span>
+          <h2>統計科</h2>
+          <p>從資料整理、描述統計到機率與分配，逐週建立複習筆記。</p>
+          <span class="subject-foot"><span>2 個週次</span><span>開啟課程 →</span></span>
+        </button>
+        <button class="subject-entry economics" type="button" data-course="economics">
+          <span class="subject-icon">經</span>
+          <h2>經濟學</h2>
+          <p>從機會成本、邊際思考到供需與市場均衡，整理生活化案例。</p>
+          <span class="subject-foot"><span>2 個週次</span><span>開啟課程 →</span></span>
+        </button>
+      </section>
+
+      <section id="scheduleView" class="schedule-view hidden" aria-label="上課資訊與行事曆">
+        <section class="schedule-cards" aria-label="各科上課資訊">
+          <article class="schedule-card accounting">
+            <h2>會計學</h2>
+            <p class="teacher">授課教師：郭啟賢｜2 學分</p>
+            <dl class="schedule-facts">
+              <div><dt>日期</dt><dd>6/19～7/11，每週五、六</dd></div>
+              <div><dt>週五</dt><dd>18:25～21:05</dd></div>
+              <div><dt>週六</dt><dd>09:00～12:00、13:00～16:00</dd></div>
+              <div><dt>教室</dt><dd>MA-010</dd></div>
+              <div><dt>助教</dt><dd>簡紫婕</dd></div>
+            </dl>
+          </article>
+          <article class="schedule-card statistics">
+            <h2>統計學</h2>
+            <p class="teacher">授課教師：葉瑞徽｜2 學分</p>
+            <dl class="schedule-facts">
+              <div><dt>日期</dt><dd>6/22～7/29，每週一、三</dd></div>
+              <div><dt>時間</dt><dd>18:25～21:05</dd></div>
+              <div><dt>教室</dt><dd>MA-010</dd></div>
+              <div><dt>助教</dt><dd>鄭佩真</dd></div>
+            </dl>
+          </article>
+          <article class="schedule-card economics">
+            <h2>經濟學</h2>
+            <p class="teacher">授課教師：洪東敏｜2 學分</p>
+            <dl class="schedule-facts">
+              <div><dt>日期</dt><dd>6/23～7/23，每週二、四</dd></div>
+              <div><dt>時間</dt><dd>18:25～21:05</dd></div>
+              <div><dt>加課</dt><dd>7/18，09:00～12:00、13:00～16:00</dd></div>
+              <div><dt>教室</dt><dd>MA-010</dd></div>
+              <div><dt>助教</dt><dd>潘芊華</dd></div>
+            </dl>
+          </article>
+        </section>
+
+        <section class="calendar-panel">
+          <div class="calendar-head">
+            <h2>2026 暑期課程行事曆</h2>
+            <div class="legend" aria-label="科目顏色">
+              <span><i></i>會計</span>
+              <span><i class="statistics"></i>統計</span>
+              <span><i class="economics"></i>經濟</span>
+            </div>
+          </div>
+          <div id="calendarMonths" class="months"></div>
+        </section>
+        <p class="privacy-note">教室已依最新資訊統一更新為 MA-010。公開網站僅列助教姓名，電話與 Email 請參考原始課程表。</p>
+      </section>
+
+      <section id="courseView" class="hidden">
+        <section class="toolbar" aria-label="查找工具">
+          <label class="search">
+            <span aria-hidden="true">⌕</span>
+            <input id="searchInput" type="search" placeholder="搜尋章節，例如：借貸、調整分錄、EPS、呆帳">
+          </label>
+          <div class="progress-note">會計 Ch1～Ch6 筆記已整理</div>
+        </section>
+
+        <section class="workspace">
+          <aside class="chapter-panel">
+            <div class="panel-head">
+              <h2 id="panelTitle">會計章節</h2>
+              <p id="panelDesc">點選章節，右側會顯示重點筆記與測驗。</p>
+            </div>
+            <div id="chapterList" class="chapter-list"></div>
+          </aside>
+          <article id="note" class="note" aria-live="polite"></article>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      const courses = {
+        accounting: {
+          title: "會計科｜Ch1～Ch6",
+          lead: "依課堂簡報整理成可快速複習的筆記，搭配分錄、生活化例子、易錯提醒與章末小測驗。",
+          panelTitle: "會計章節",
+          panelDesc: "點選章節，右側會顯示重點筆記與測驗。",
+          items: [
+            {
+              id: "acc-ch1",
+              no: "Ch1",
+              title: "ch1_會計恆等式及財報",
+              meta: "資產、負債、權益與三大財報",
+              summary: "從資產 = 負債 + 權益出發，理解每筆交易如何維持平衡，以及損益如何進入保留盈餘。",
+              tags: ["會計恆等式", "資產負債表", "損益表", "股本", "保留盈餘"],
+              sections: [
+                {
+                  title: "1. 會計恆等式",
+                  body: `
+                    <div class="formula">資產（Asset）＝ 負債（Liability）＋ 權益（Equity）</div>
+                    <ul>
+                      <li><strong>資產：</strong>企業控制、預期能帶來未來經濟效益的資源，例如現金、應收帳款、設備。</li>
+                      <li><strong>負債：</strong>企業因過去事項產生、未來必須以資源清償的現時義務，例如應付帳款、銀行借款。</li>
+                      <li><strong>權益：</strong>資產扣除負債後，真正屬於股東的剩餘部分。</li>
+                    </ul>
+                    <div class="warning"><strong>易錯提醒：</strong>權益不是公司的現金，而是資產扣掉負債後的剩餘請求權。</div>
+                  `
+                },
+                {
+                  title: "2. 交易如何維持平衡",
+                  body: `
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>交易</th><th>資產</th><th>負債</th><th>權益</th></tr></thead>
+                      <tbody>
+                        <tr><td>股東投入現金 1,000,000</td><td>現金 +1,000,000</td><td>不變</td><td>股本 +1,000,000</td></tr>
+                        <tr><td>現金購買設備 100,000</td><td>現金 -100,000；設備 +100,000</td><td>不變</td><td>不變</td></tr>
+                        <tr><td>賒購設備 100,000</td><td>設備 +100,000</td><td>應付帳款 +100,000</td><td>不變</td></tr>
+                        <tr><td>完成服務並收現 100,000</td><td>現金 +100,000</td><td>不變</td><td>收入使權益 +100,000</td></tr>
+                        <tr><td>支付租金 40,000</td><td>現金 -40,000</td><td>不變</td><td>費用使權益 -40,000</td></tr>
+                      </tbody>
+                    </table></div>
+                    <p>所謂「平衡」，不只是等號兩邊總額相等；每筆交易造成的加減方向也必須一致地反映在等式中。</p>
+                  `
+                },
+                {
+                  title: "3. 三張財報的關係",
+                  body: `
+                    <ol>
+                      <li><strong>損益表：</strong>收入－費用＝本期損益，回答「這段期間賺多少」。</li>
+                      <li><strong>權益變動表：</strong>把本期損益、增資與股利等變動彙總，回答「權益為何改變」。</li>
+                      <li><strong>資產負債表：</strong>列示期末資產、負債與權益，回答「某一時點的財務狀況」。</li>
+                    </ol>
+                    <div class="example"><strong>例：</strong>服務收入 150,000，租金與薪資共 70,000，本期淨利為 80,000。這 80,000 會先出現在損益表，再增加權益變動表中的保留盈餘，最後反映在資產負債表的權益。</div>
+                  `
+                },
+                {
+                  title: "4. 股本與保留盈餘",
+                  body: `
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>項目</th><th>來源</th><th>直覺比喻</th></tr></thead>
+                      <tbody>
+                        <tr><td>股本</td><td>股東直接投入</td><td>存款本金</td></tr>
+                        <tr><td>保留盈餘</td><td>歷年淨利減股利後累積</td><td>本金賺來、尚未領走的成果</td></tr>
+                      </tbody>
+                    </table></div>
+                    <div class="quiz">
+                      <p><strong>小測驗：</strong>公司向銀行借款 300,000，會計恆等式如何變動？這筆錢會增加股本嗎？</p>
+                      <details><summary>查看答案</summary><p>現金（資產）增加 300,000，銀行借款（負債）增加 300,000；不影響股本，因為資金來自債權人而非股東。</p></details>
+                    </div>
+                  `
+                }
+              ]
+            },
+            {
+              id: "acc-ch2",
+              no: "Ch2",
+              title: "ch2_借貸法則_分錄_過帳",
+              meta: "五大科目、借貸方向與會計循環",
+              summary: "借、貸不是借錢與放貸，而是帳戶的左方與右方。先判斷科目類別，再判斷增加或減少。",
+              tags: ["借方", "貸方", "分錄", "過帳", "試算表"],
+              sections: [
+                {
+                  title: "1. 五大會計科目",
+                  body: `
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>類別</th><th>常見科目</th><th>正常餘額</th></tr></thead>
+                      <tbody>
+                        <tr><td>資產</td><td>現金、應收帳款、辦公用品、設備</td><td>借方</td></tr>
+                        <tr><td>負債</td><td>應付帳款、應付票據</td><td>貸方</td></tr>
+                        <tr><td>權益</td><td>股本、保留盈餘</td><td>貸方</td></tr>
+                        <tr><td>收入</td><td>服務收入、銷貨收入</td><td>貸方</td></tr>
+                        <tr><td>費用</td><td>租金費用、薪資費用</td><td>借方</td></tr>
+                      </tbody>
+                    </table></div>
+                  `
+                },
+                {
+                  title: "2. 借貸法則",
+                  body: `
+                    <div class="formula">借方（Debit）＝左方；貸方（Credit）＝右方</div>
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>科目</th><th>增加</th><th>減少</th></tr></thead>
+                      <tbody>
+                        <tr><td>資產、費用</td><td>借方</td><td>貸方</td></tr>
+                        <tr><td>負債、權益、收入</td><td>貸方</td><td>借方</td></tr>
+                      </tbody>
+                    </table></div>
+                    <div class="warning"><strong>記憶方式：</strong>「資費借增，負權收貸增」。借貸只代表左右方向，不代表好壞，也不等於日常語言的借錢或貸款。</div>
+                  `
+                },
+                {
+                  title: "3. 分錄範例",
+                  body: `
+                    <p><strong>股東投入現金 1,000,000：</strong></p>
+                    <div class="entry"><span>借：現金</span><span>1,000,000</span><span class="credit">貸：股本</span><span>1,000,000</span></div>
+                    <p><strong>賒購設備 100,000：</strong></p>
+                    <div class="entry"><span>借：電腦設備</span><span>100,000</span><span class="credit">貸：應付帳款</span><span>100,000</span></div>
+                    <p><strong>提供服務並讓客戶簽帳 50,000：</strong></p>
+                    <div class="entry"><span>借：應收帳款</span><span>50,000</span><span class="credit">貸：服務收入</span><span>50,000</span></div>
+                    <p>每筆分錄至少影響兩個科目，而且借方合計一定等於貸方合計。</p>
+                  `
+                },
+                {
+                  title: "4. 日記簿、過帳與試算",
+                  body: `
+                    <ol>
+                      <li><strong>分析交易：</strong>找出受影響科目及增減。</li>
+                      <li><strong>記入日記簿：</strong>依日期編製借貸分錄。</li>
+                      <li><strong>過帳至分類帳：</strong>把分錄依科目彙整，計算各科目餘額。</li>
+                      <li><strong>編製試算表：</strong>確認所有借方餘額合計等於貸方餘額合計。</li>
+                    </ol>
+                    <div class="warning"><strong>注意：</strong>試算表平衡只表示借貸總額相等，不保證完全沒有錯誤。例如整筆交易漏記，借貸仍可能平衡。</div>
+                    <div class="quiz">
+                      <p><strong>小測驗：</strong>公司以現金 20,000 購買辦公用品，應借記與貸記哪些科目？</p>
+                      <details><summary>查看答案</summary><p>借記「辦公用品」20,000，貸記「現金」20,000。兩者都是資產，一增一減。</p></details>
+                    </div>
+                  `
+                }
+              ]
+            },
+            {
+              id: "acc-ch3",
+              no: "Ch3",
+              title: "ch3_調整_結帳_編表",
+              meta: "應計基礎、四類調整與結帳",
+              summary: "現金收付時間不一定等於收入費用發生時間；調整分錄的任務，就是把損益放回正確期間。",
+              tags: ["應計基礎", "調整分錄", "折舊", "結帳", "永久帳戶"],
+              sections: [
+                {
+                  title: "1. 會計期間與應計基礎",
+                  body: `
+                    <p>企業持續經營，但財報必須定期產出，因此把經營活動切成月、季、年等會計期間。IFRS 財報採<strong>應計基礎</strong>，收入在賺得時認列，費用在發生時認列，不以現金何時收付為唯一依據。</p>
+                    <div class="example"><strong>例：</strong>12 月完成服務，客戶次年 1 月付款。收入屬於 12 月，因為服務已在 12 月完成。</div>
+                    <p>勞務收入通常須能可靠衡量金額、經濟效益很可能流入、完成程度與相關成本可可靠衡量。</p>
+                  `
+                },
+                {
+                  title: "2. 四類調整分錄",
+                  body: `
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>類型</th><th>情境</th><th>典型分錄方向</th></tr></thead>
+                      <tbody>
+                        <tr><td>應收收入</td><td>已賺得、尚未收錢</td><td>借：應收項目；貸：收入</td></tr>
+                        <tr><td>應付費用</td><td>費用已發生、尚未付款</td><td>借：費用；貸：應付項目</td></tr>
+                        <tr><td>預收收入</td><td>先收錢，部分服務已完成</td><td>借：預收收入；貸：收入</td></tr>
+                        <tr><td>預付費用</td><td>先付款，部分資產已耗用</td><td>借：費用；貸：預付資產</td></tr>
+                      </tbody>
+                    </table></div>
+                    <div class="entry"><span>借：應收帳款</span><span>30,000</span><span class="credit">貸：網路服務收入</span><span>30,000</span></div>
+                    <div class="entry"><span>借：利息費用</span><span>10,000</span><span class="credit">貸：應付利息</span><span>10,000</span></div>
+                    <div class="entry"><span>借：預收服務收入</span><span>20,000</span><span class="credit">貸：服務收入</span><span>20,000</span></div>
+                    <div class="entry"><span>借：保險費用</span><span>1,000</span><span class="credit">貸：預付保險費</span><span>1,000</span></div>
+                  `
+                },
+                {
+                  title: "3. 折舊",
+                  body: `
+                    <p>設備成本 1,200,000、耐用年限 10 年、無殘值，採直線法時，每月折舊為 1,200,000 ÷ 120 ＝ 10,000。</p>
+                    <div class="entry"><span>借：折舊費用</span><span>10,000</span><span class="credit">貸：累計折舊－設備</span><span>10,000</span></div>
+                    <div class="warning"><strong>易錯提醒：</strong>提列折舊通常不直接減少設備原始成本，而以「累計折舊」作為資產減項。設備成本－累計折舊＝帳面值。</div>
+                  `
+                },
+                {
+                  title: "4. 結帳與帳戶分類",
+                  body: `
+                    <ol>
+                      <li>將所有收入結轉至「本期損益」。</li>
+                      <li>將所有費用結轉至「本期損益」。</li>
+                      <li>把本期淨利或淨損結轉至「保留盈餘」。</li>
+                    </ol>
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>類型</th><th>包含科目</th><th>期末處理</th></tr></thead>
+                      <tbody>
+                        <tr><td>暫時性帳戶</td><td>收入、費用及損益科目</td><td>結帳後歸零，下期重新累積</td></tr>
+                        <tr><td>永久性帳戶</td><td>資產、負債、權益</td><td>餘額帶到下期</td></tr>
+                      </tbody>
+                    </table></div>
+                    <div class="quiz">
+                      <p><strong>小測驗：</strong>公司 10 月 1 日預付三個月租金 30,000。10 月 31 日應作何調整？</p>
+                      <details><summary>查看答案</summary><p>一個月已耗用 10,000：借記「租金費用」10,000，貸記「預付房租」10,000。剩餘預付房租 20,000。</p></details>
+                    </div>
+                  `
+                }
+              ]
+            },
+            {
+              id: "acc-ch4",
+              no: "Ch4",
+              title: "ch4_股權投資與合併財報",
+              meta: "公允價值法、權益法與合併沖銷",
+              summary: "投資會計處理的關鍵不是只看持股數，而是投資公司對被投資公司的影響程度與控制力。",
+              tags: ["FVPL", "FVOCI", "權益法", "合併報表", "商譽"],
+              sections: [
+                {
+                  title: "1. 持股影響程度與處理方式",
+                  body: `
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>通常持股比例</th><th>影響程度</th><th>會計處理</th></tr></thead>
+                      <tbody>
+                        <tr><td>未達 20%</td><td>通常無重大影響</td><td>公允價值法：FVPL 或指定 FVOCI－不可重分類</td></tr>
+                        <tr><td>20%～50%</td><td>重大影響力</td><td>權益法，稱為關聯企業</td></tr>
+                        <tr><td>超過 50%</td><td>通常具有控制力</td><td>母公司個體帳採權益法，期末編合併報表</td></tr>
+                      </tbody>
+                    </table></div>
+                    <div class="warning"><strong>判斷重點：</strong>比例是通常指標，不是絕對答案。即使持股未過半，若能掌控董事會或主導營運決策，仍可能具有控制力。</div>
+                  `
+                },
+                {
+                  title: "2. FVPL 與 FVOCI－NR",
+                  body: `
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>比較</th><th>FVPL</th><th>FVOCI－NR</th></tr></thead>
+                      <tbody>
+                        <tr><td>公允價值變動</td><td>列入本期損益</td><td>列入其他綜合損益（OCI）</td></tr>
+                        <tr><td>出售時累積損益</td><td>反映於損益與保留盈餘</td><td>不得重分類至損益，直接轉保留盈餘</td></tr>
+                        <tr><td>股利收入</td><td>列本期損益</td><td>原則上仍列本期損益</td></tr>
+                        <tr><td>交易成本</td><td>通常費用化</td><td>納入投資成本</td></tr>
+                      </tbody>
+                    </table></div>
+                    <div class="example"><strong>例：</strong>股票成本 180,000，年底公允價值 170,000。FVPL 認列 10,000 評價損失於本期損益；若指定 FVOCI－NR，則認列於 OCI，不影響當期 EPS。</div>
+                  `
+                },
+                {
+                  title: "3. 權益法",
+                  body: `
+                    <ul>
+                      <li>原始投資按成本（含交易成本）認列。</li>
+                      <li>被投資公司獲利：按持股比例增加投資帳面額並認列投資損益。</li>
+                      <li>被投資公司虧損：按持股比例減少投資帳面額並認列投資損失。</li>
+                      <li>收到股利：視為投資成本收回，減少投資帳面額，不再認列股利收入。</li>
+                    </ul>
+                    <div class="example"><strong>例：</strong>持股 30%，被投資公司可供普通股享有的淨利為 50,000，投資公司認列投資利益 15,000；若收到被投資公司股利 30,000，則收現 9,000 並減少投資 9,000。</div>
+                  `
+                },
+                {
+                  title: "4. 合併報表、商譽與非控制權益",
+                  body: `
+                    <p>合併報表把母、子公司視為單一經濟個體。母公司帳上的「投資子公司」與子公司的權益不能重複計算，因此要在合併工作底稿沖銷。</p>
+                    <div class="formula">商譽＝投資成本－取得之可辨認淨資產公允價值份額</div>
+                    <ul>
+                      <li>投資成本大於取得淨資產公允價值份額時，通常產生商譽。</li>
+                      <li>母公司未持有子公司 100% 時，合併權益會列示非控制權益。</li>
+                      <li>合併淨利須分為歸屬母公司業主與歸屬非控制權益兩部分。</li>
+                    </ul>
+                    <div class="quiz">
+                      <p><strong>小測驗：</strong>公司持有被投資公司 30%，且具有重大影響力。被投資公司發放現金股利時，為何不認列股利收入？</p>
+                      <details><summary>查看答案</summary><p>權益法已在被投資公司獲利時按比例認列投資利益；收到股利只是把已認列的淨資產轉成現金，屬投資成本回收，因此減少投資帳面額。</p></details>
+                    </div>
+                  `
+                }
+              ]
+            },
+            {
+              id: "acc-ch5",
+              no: "Ch5",
+              title: "ch5 會計損益及每股盈餘",
+              meta: "綜合損益、股利、基本與稀釋 EPS",
+              summary: "本期淨利與其他綜合損益共同構成綜合損益，但現行 EPS 只以歸屬普通股股東的本期淨利計算。",
+              tags: ["綜合損益", "保留盈餘", "現金股利", "基本EPS", "稀釋EPS"],
+              sections: [
+                {
+                  title: "1. 會計損益與綜合損益",
+                  body: `
+                    <div class="formula">本期綜合損益＝本期淨利＋本期其他綜合損益（OCI）</div>
+                    <p>以資產負債表法觀察，損益可由期末淨資產減期初淨資產衡量，但要排除增資、股利等與業主間的交易。</p>
+                    <div class="warning"><strong>易錯提醒：</strong>OCI 也是權益變動的一部分，但現行每股盈餘只使用本期淨利，不把 OCI 放進分子。</div>
+                  `
+                },
+                {
+                  title: "2. 多站式損益表",
+                  body: `
+                    <div class="formula">營業收入－營業成本＝營業毛利<br>營業毛利－營業費用＝營業利益<br>營業利益±營業外收支－所得稅＝本期淨利</div>
+                    <ul>
+                      <li>營業費用常依功能分為行銷、管理、研發等。</li>
+                      <li>利息收入、股利收入、財務成本與權益法投資損益通常列在營業外收支。</li>
+                      <li>OCI 須區分未來可能重分類至損益，以及不得重分類至損益的項目。</li>
+                    </ul>
+                  `
+                },
+                {
+                  title: "3. 保留盈餘與股利",
+                  body: `
+                    <p>保留盈餘是歷年本期淨利扣除股利後尚未分配的累積數，可能包括未分配盈餘、法定盈餘公積與特別盈餘公積。</p>
+                    <ul>
+                      <li><strong>現金股利：</strong>法定義務成立時減少保留盈餘並認列應付股利，實際發放時減少現金。</li>
+                      <li><strong>股票股利：</strong>不改變資產、負債與股東持股比例，只增加流通股數並在權益內重分類。</li>
+                    </ul>
+                  `
+                },
+                {
+                  title: "4. 基本 EPS",
+                  body: `
+                    <div class="formula">基本 EPS＝（歸屬普通股股東淨利－特別股股利）÷ 加權平均流通在外普通股股數</div>
+                    <p>現金增資與庫藏股依實際流通期間加權；股票股利沒有帶入新資金，因此須追溯調整期初及比較期間股數。</p>
+                    <div class="example"><strong>簡例：</strong>淨利 1,000,000，特別股股利 100,000，加權平均普通股 300,000 股，基本 EPS＝900,000 ÷ 300,000＝3 元。</div>
+                  `
+                },
+                {
+                  title: "5. 稀釋 EPS",
+                  body: `
+                    <ul>
+                      <li><strong>認股權：</strong>採庫藏股票法。假設收到認購款後以平均市價買回股票，淨增加股數才列入稀釋股數。</li>
+                      <li><strong>可轉換特別股或公司債：</strong>採如果轉換法，同時調整分子與分母。</li>
+                      <li>只納入會讓 EPS 降低的潛在普通股；反稀釋項目排除。</li>
+                    </ul>
+                    <div class="example"><strong>認股權例：</strong>1,000 權、執行價 20、平均市價 25。認購款 20,000 可買回 800 股，淨增加 200 股，因此具有稀釋作用。</div>
+                    <div class="quiz">
+                      <p><strong>小測驗：</strong>公司發放 20% 股票股利，為何計算 EPS 時要追溯調整期初股數？</p>
+                      <details><summary>查看答案</summary><p>股票股利未帶入新資金，但股數增加、每股可分享盈餘下降。追溯調整能讓發放前後與比較期間維持一致的計算基礎。</p></details>
+                    </div>
+                  `
+                }
+              ]
+            },
+            {
+              id: "acc-ch6",
+              no: "Ch6",
+              title: "ch6 其他議題",
+              meta: "呆帳、製造成本、外幣避險與員工紅利",
+              summary: "本章把數個實務議題串在一起：應收款減損、製造成本流動、遠期外匯與員工分紅費用化。",
+              tags: ["備抵呆帳", "料工費", "遠期外匯", "公允價值避險", "員工紅利"],
+              sections: [
+                {
+                  title: "1. 應收款項與呆帳",
+                  body: `
+                    <p>應收帳款是金融資產。期末須估計無法收回的金額，以備抵法表達應收帳款淨變現價值。</p>
+                    <div class="formula">應收帳款淨額＝應收帳款－備抵呆帳</div>
+                    <div class="example"><strong>帳齡分析例：</strong>期末需要的備抵呆帳為 6,000，調整前已有貸方餘額 1,500，當期呆帳費用應提 4,500；若調整前是借方餘額 500，則須提 6,500。</div>
+                    <div class="entry"><span>借：呆帳費用</span><span>4,500</span><span class="credit">貸：備抵呆帳</span><span>4,500</span></div>
+                    <p>確定無法收回時，借記備抵呆帳、貸記應收帳款。此時應收帳款與備抵呆帳同額減少，應收帳款淨額與當期呆帳費用不變。</p>
+                  `
+                },
+                {
+                  title: "2. 製造業存貨成本",
+                  body: `
+                    <div class="formula">製造成本＝直接材料＋直接人工＋製造費用（料、工、費）</div>
+                    <div class="table-wrap"><table>
+                      <thead><tr><th>項目</th><th>直接成本</th><th>間接成本</th></tr></thead>
+                      <tbody>
+                        <tr><td>材料</td><td>可直接追溯到產品，借記在製品</td><td>難以直接歸屬，借記製造費用</td></tr>
+                        <tr><td>人工</td><td>生產人員工時，借記在製品</td><td>保全、清潔、監工等，借記製造費用</td></tr>
+                      </tbody>
+                    </table></div>
+                    <div class="formula">預計製造費用分攤率＝預計製造費用 ÷ 預計分攤基礎<br>分攤製造費用＝分攤率 × 實際使用的分攤基礎</div>
+                    <p>已分攤數大於實際數為多分攤，反之為少分攤。差額通常調整銷貨成本；金額重大時，應分攤調整存貨與銷貨成本。</p>
+                  `
+                },
+                {
+                  title: "3. 非避險遠期外匯交易",
+                  body: `
+                    <p>遠期出售美元通常代表預期美元貶值，希望未來低價買入美元，再按已鎖定的較高價格出售。若目的只是賺價差，衍生工具公允價值變動列入本期損益（FVPL）。</p>
+                    <div class="example"><strong>簡報例：</strong>以 28.22 簽訂出售美元 50,000 的遠期合約，結算基礎變為 28.23，最終產生新台幣 500 元損失。</div>
+                  `
+                },
+                {
+                  title: "4. 公允價值避險",
+                  body: `
+                    <p>公司若已有不可取消的外幣進貨承諾，可能用遠期外匯購入合約鎖定成本。在符合避險會計要件時：</p>
+                    <ul>
+                      <li>避險工具的公允價值變動認列損益。</li>
+                      <li>被避險確定承諾因匯率造成的價值變動也認列損益。</li>
+                      <li>兩者方向相反，目的在降低匯率波動對損益與進貨成本的影響。</li>
+                    </ul>
+                    <div class="warning"><strong>觀念重點：</strong>避險不是保證賺錢，而是用一邊的損失抵銷另一邊的利益或反之，換取成本可預測性。</div>
+                  `
+                },
+                {
+                  title: "5. 員工紅利費用化",
+                  body: `
+                    <p>員工紅利源自員工提供勞務，經濟實質是薪酬成本，不是股東的盈餘分配。台灣自 2008 年起正式實施員工分紅費用化。</p>
+                    <div class="entry"><span>借：員工酬勞費用</span><span>XXX</span><span class="credit">貸：應付員工酬勞</span><span>XXX</span></div>
+                    <p>即使次年才實際發放，只要獎酬對應本年度績效且金額可合理估計，就應依權責發生制認列於本年度；次年付款時沖銷負債，不再影響次年損益。</p>
+                    <div class="quiz">
+                      <p><strong>小測驗：</strong>已沖銷的客戶帳款後來又收回，應如何處理？會直接認列收入嗎？</p>
+                      <details><summary>查看答案</summary><p>先迴轉原沖銷：借記應收帳款、貸記備抵呆帳；再收現：借記現金、貸記應收帳款。這是帳款收回，不是新的收入。</p></details>
+                    </div>
+                  `
+                }
+              ]
+            }
+          ]
+        },
+        statistics: {
+          title: "統計科｜課程入口",
+          lead: "統計科目前保留原有 Week 1、Week 2 架構，後續可繼續補入公式、圖表與例題。",
+          panelTitle: "統計週次",
+          panelDesc: "目前保留既有入口。",
+          items: [
+            { id: "stat-w1", no: "W1", title: "統計學導論", meta: "資料類型、描述統計、自由度", summary: "統計 Week 1 筆記入口。", tags: ["資料類型", "平均數", "標準差", "自由度"], sections: [] },
+            { id: "stat-w2", no: "W2", title: "機率與分配", meta: "機率、隨機變數、常見分配", summary: "統計 Week 2 教材待補。", tags: ["機率", "常態分配", "抽樣"], sections: [] }
+          ]
+        },
+        economics: {
+          title: "經濟學｜課程入口",
+          lead: "經濟學目前保留原有 Week 1、Week 2 架構，後續可繼續補入供需圖與生活化案例。",
+          panelTitle: "經濟週次",
+          panelDesc: "目前保留既有入口。",
+          items: [
+            { id: "eco-w1", no: "W1", title: "經濟學入門", meta: "稀少性、選擇、機會成本", summary: "經濟 Week 1 教材待補。", tags: ["機會成本", "邊際思考", "市場"], sections: [] },
+            { id: "eco-w2", no: "W2", title: "供需與均衡", meta: "需求、供給、均衡價格", summary: "經濟 Week 2 教材待補。", tags: ["需求曲線", "供給曲線", "均衡"], sections: [] }
+          ]
+        }
+      };
+
+      const chapterList = document.querySelector("#chapterList");
+      const note = document.querySelector("#note");
+      const searchInput = document.querySelector("#searchInput");
+      const homeView = document.querySelector("#homeView");
+      const courseView = document.querySelector("#courseView");
+      const scheduleView = document.querySelector("#scheduleView");
+      const homeButton = document.querySelector("#homeButton");
+      const scheduleButton = document.querySelector("#scheduleButton");
+      const subjectEntries = Array.from(document.querySelectorAll(".subject-entry"));
+      const calendarMonths = document.querySelector("#calendarMonths");
+      let activeCourse = "accounting";
+      let activeItem = "acc-ch1";
+
+      const classSchedule = [
+        { date: "2026-06-19", subject: "會計", className: "accounting", time: "18:25～21:05" },
+        { date: "2026-06-20", subject: "會計", className: "accounting", time: "09～12／13～16" },
+        { date: "2026-06-26", subject: "會計", className: "accounting", time: "18:25～21:05" },
+        { date: "2026-06-27", subject: "會計", className: "accounting", time: "09～12／13～16" },
+        { date: "2026-07-03", subject: "會計", className: "accounting", time: "18:25～21:05" },
+        { date: "2026-07-04", subject: "會計", className: "accounting", time: "09～12／13～16" },
+        { date: "2026-07-10", subject: "會計", className: "accounting", time: "18:25～21:05" },
+        { date: "2026-07-11", subject: "會計", className: "accounting", time: "09～12／13～16" },
+        { date: "2026-06-22", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-06-24", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-06-29", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-01", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-06", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-08", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-13", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-15", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-20", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-22", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-27", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-07-29", subject: "統計", className: "statistics", time: "18:25～21:05" },
+        { date: "2026-06-23", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-06-25", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-06-30", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-07-02", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-07-07", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-07-09", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-07-14", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-07-16", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-07-18", subject: "經濟", className: "economics", time: "09～12／13～16" },
+        { date: "2026-07-21", subject: "經濟", className: "economics", time: "18:25～21:05" },
+        { date: "2026-07-23", subject: "經濟", className: "economics", time: "18:25～21:05" }
+      ];
+
+      function currentCourse() {
+        return courses[activeCourse];
+      }
+
+      function findItem(id) {
+        return currentCourse().items.find(item => item.id === id) || currentCourse().items[0];
+      }
+
+      function searchableText(item) {
+        return [item.no, item.title, item.meta, item.summary, ...item.tags, ...item.sections.map(section => section.title + " " + section.body.replace(/<[^>]*>/g, " "))].join(" ").toLowerCase();
+      }
+
+      function renderHeader() {
+        const course = currentCourse();
+        document.querySelector("#pageTitle").textContent = course.title;
+        document.querySelector("#pageLead").textContent = course.lead;
+        document.querySelector("#panelTitle").textContent = course.panelTitle;
+        document.querySelector("#panelDesc").textContent = course.panelDesc;
+        document.querySelector("#chapterCount").textContent = course.items.length;
+        document.querySelector("#countLabel").textContent = activeCourse === "accounting" ? "章節" : "週次";
+        document.querySelector("#middleCount").textContent = activeCourse === "accounting" ? "213" : "2";
+        document.querySelector("#middleLabel").textContent = activeCourse === "accounting" ? "簡報頁" : "課程入口";
+        document.querySelector("#quizCount").textContent = activeCourse === "accounting" ? "6" : "0";
+        document.querySelector("#quizLabel").textContent = "章末測驗";
+        document.querySelector(".progress-note").textContent = activeCourse === "accounting" ? "會計 Ch1～Ch6 筆記已整理" : "教材入口已保留";
+      }
+
+      function renderList() {
+        const query = searchInput.value.trim().toLowerCase();
+        const visible = currentCourse().items.filter(item => !query || searchableText(item).includes(query));
+        chapterList.innerHTML = visible.map(item => `
+          <button class="chapter-button ${item.id === activeItem ? "active" : ""}" type="button" data-id="${item.id}">
+            <span class="chapter-no">${item.no}</span>
+            <span>
+              <span class="chapter-name">${item.title}</span>
+              <span class="chapter-meta">${item.meta}</span>
+            </span>
+          </button>
+        `).join("") || `<div class="empty">找不到符合的章節</div>`;
+
+        document.querySelectorAll(".chapter-button").forEach(button => {
+          button.addEventListener("click", () => {
+            activeItem = button.dataset.id;
+            renderList();
+            renderNote();
+            if (window.innerWidth < 900) note.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        });
+      }
+
+      function renderNote() {
+        const item = findItem(activeItem);
+        const content = item.sections.length
+          ? item.sections.map(section => `<section class="note-section"><h3>${section.title}</h3>${section.body}</section>`).join("")
+          : `<div class="empty"><strong>${item.title}</strong><br><br>目前保留課程入口，教材內容待後續加入。</div>`;
+
+        note.innerHTML = `
+          <header class="note-hero">
+            <p class="note-label">${item.no} STUDY NOTES</p>
+            <h2>${item.title}</h2>
+            <p>${item.summary}</p>
+            <div class="tag-list">${item.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+          </header>
+          <div class="note-body">${content}</div>
+        `;
+      }
+
+      function render() {
+        renderHeader();
+        renderList();
+        renderNote();
+      }
+
+      function renderCalendarMonth(year, month) {
+        const monthNumber = String(month + 1).padStart(2, "0");
+        const firstDay = new Date(year, month, 1);
+        const lastDate = new Date(year, month + 1, 0).getDate();
+        const leadingDays = (firstDay.getDay() + 6) % 7;
+        const weekdays = ["一", "二", "三", "四", "五", "六", "日"];
+        const cells = [];
+
+        for (let index = 0; index < leadingDays; index += 1) {
+          cells.push('<div class="day empty"></div>');
+        }
+
+        for (let day = 1; day <= lastDate; day += 1) {
+          const date = `${year}-${monthNumber}-${String(day).padStart(2, "0")}`;
+          const events = classSchedule
+            .filter(event => event.date === date)
+            .map(event => `<span class="calendar-event ${event.className}">${event.subject}<br>${event.time}</span>`)
+            .join("");
+          cells.push(`<div class="day"><span class="day-number">${day}</span>${events}</div>`);
+        }
+
+        while (cells.length % 7 !== 0) {
+          cells.push('<div class="day empty"></div>');
+        }
+
+        return `
+          <section class="month">
+            <h3>${year} 年 ${month + 1} 月</h3>
+            <div class="calendar-grid">
+              ${weekdays.map(day => `<div class="weekday">${day}</div>`).join("")}
+              ${cells.join("")}
+            </div>
+          </section>
+        `;
+      }
+
+      function renderCalendar() {
+        calendarMonths.innerHTML = renderCalendarMonth(2026, 5) + renderCalendarMonth(2026, 6);
+      }
+
+      searchInput.addEventListener("input", renderList);
+
+      function openCourse(courseId) {
+          activeCourse = courseId;
+          activeItem = currentCourse().items[0].id;
+          searchInput.value = "";
+          homeView.classList.add("hidden");
+          scheduleView.classList.add("hidden");
+          courseView.classList.remove("hidden");
+          homeButton.classList.remove("hidden");
+          scheduleButton.classList.remove("hidden");
+          render();
+      }
+
+      function showHome() {
+        homeView.classList.remove("hidden");
+        scheduleView.classList.add("hidden");
+        courseView.classList.add("hidden");
+        homeButton.classList.add("hidden");
+        scheduleButton.classList.remove("hidden");
+        document.querySelector("#pageTitle").textContent = "115富六學分班";
+        document.querySelector("#pageLead").textContent = "選擇科目後，再進入各章節閱讀課堂筆記、例題與小測驗。";
+        document.querySelector("#chapterCount").textContent = "3";
+        document.querySelector("#countLabel").textContent = "科目";
+        document.querySelector("#middleCount").textContent = "10";
+        document.querySelector("#middleLabel").textContent = "章節入口";
+        document.querySelector("#quizCount").textContent = "6";
+        document.querySelector("#quizLabel").textContent = "會計測驗";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function showSchedule() {
+        homeView.classList.add("hidden");
+        courseView.classList.add("hidden");
+        scheduleView.classList.remove("hidden");
+        homeButton.classList.remove("hidden");
+        scheduleButton.classList.add("hidden");
+        document.querySelector("#pageTitle").textContent = "上課資訊與行事曆";
+        document.querySelector("#pageLead").textContent = "三科授課教師、上課時段與完整日期集中在同一畫面；教室均為 MA-010。";
+        document.querySelector("#chapterCount").textContent = "3";
+        document.querySelector("#countLabel").textContent = "科目";
+        document.querySelector("#middleCount").textContent = "31";
+        document.querySelector("#middleLabel").textContent = "堂課";
+        document.querySelector("#quizCount").textContent = "MA-010";
+        document.querySelector("#quizLabel").textContent = "教室";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      subjectEntries.forEach(entry => {
+        entry.addEventListener("click", () => openCourse(entry.dataset.course));
+      });
+
+      homeButton.addEventListener("click", showHome);
+      scheduleButton.addEventListener("click", showSchedule);
+      renderCalendar();
+      showHome();
+    </script>
+  </body>
+</html>
